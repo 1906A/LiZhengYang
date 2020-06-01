@@ -6,6 +6,8 @@ import com.leyou.search.pojo.SearchRequest;
 import com.leyou.search.repository.GoodsRepository;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +33,9 @@ public class SearchController {
         builder.withQuery(QueryBuilders.matchQuery("all",searchRequest.getKey()).operator(Operator.AND));
 
         builder.withPageable(PageRequest.of(searchRequest.getPage() - 1, searchRequest.getSize()));
+
+        builder.withSort(SortBuilders.fieldSort(searchRequest.getSortBy())
+                .order(searchRequest.isDescending()? SortOrder.DESC:SortOrder.ASC));
 
         Page<Goods> search = goodsRepository.search(builder.build());
 
