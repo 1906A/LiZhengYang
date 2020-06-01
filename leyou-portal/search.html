@@ -276,13 +276,13 @@
             <div class="sui-navbar">
                 <div class="navbar-inner filter">
                     <ul class="sui-nav">
-                        <li class="active">
+                        <li>
                             <a href="#">综合</a>
                         </li>
                         <li>
                             <a href="#">销量</a>
                         </li>
-                        <li>
+                        <li @click="orderby('createTime')" :class="{active: search.sortBy==='createTime'}">
                             <a href="#">新品</a>
                         </li>
                         <li>
@@ -293,10 +293,10 @@
                         </li>
                     </ul>
                     <div class="top-pagination">
-                        <span>共 <i style="color: #222;">7600+</i> 商品</span>
-                        <span><i style="color: red;">2</i>/123</span>
-                        <a class="btn-arrow" href="#" style="display: inline-block">&lt;</a>
-                        <a class="btn-arrow" href="#" style="display: inline-block">&gt;</a>
+                        <span>共 <i style="color: #222;">{{total}}</i> 商品</span>
+                        <span><i style="color: red;">{{search.page}}</i>/{{totalPage}}</span>
+                        <a class="btn-arrow" href="#" style="display: inline-block" @click="prePage">&lt;</a>
+                        <a class="btn-arrow" href="#" style="display: inline-block" @click="nextPage">&gt;</a>
                     </div>
                 </div>
             </div>
@@ -341,22 +341,22 @@
             <div class="fr">
                 <div class="sui-pagination pagination-large">
                     <ul>
-                        <li class="prev disabled">
-                            <a href="#">«上一页</a>
+                        <li class="prev " :class="{disabled:search.page == 1}">
+                            <a @click="prePage">«上一页</a>
                         </li>
-                        <li class="active" v-for="i in Math.min(5,totalPage)">
+                        <li :class="{active:search.page == index(i)}" v-for="i in Math.min(5,totalPage)" @click="search.page = index(i)">
                             <a href="#">{{index(i)}}</a>
                         </li>
 
                         <li class="dotted"><span>...</span></li>
-                        <li class="next">
-                            <a href="#">下一页»</a>
+                        <li class="next" :class="{disabled:search.page == totalPage}">
+                            <a @click="nextPage">下一页»</a>
                         </li>
                     </ul>
                     <div><span>共10页&nbsp;</span><span>
       到第
-      <input type="text" class="page-num">
-      页 <button class="page-confirm" onclick="alert(1)">确定</button></span></div>
+      <input type="text" class="page-num" v-model="search.page">
+      页 <button class="page-confirm" @click="gotoPage">确定</button></span></div>
                 </div>
             </div>
         </div>
@@ -464,6 +464,24 @@
 
         },
         methods:{
+            orderby(v){
+                this.search.sortBy = v;
+                this.search.descending =!this.search.descending;
+                this.initData();
+            },
+            gotoPage(){
+                this.initData();
+            },
+            prePage(){
+              if (this.search.page > 1){
+                  this.search.page --;
+              }
+            },
+            nextPage(){
+                if (this.search.page < this.totalPage){
+                    this.search.page ++;
+                }
+            },
             index(i){
                 if(this.search.page <=3 || this.totalPage <=5){
 
@@ -489,7 +507,6 @@
 
                         this.goodList = data.items;
                         this.total = data.total;
-                        this.search.page = 1;
                         this.totalPage = data.totalPage;
                     })
                     .catch(error =>{
@@ -499,9 +516,26 @@
         },
         created(){
             const search = ly.parse(location.search.substring(1));
+            if (location.search.substring(1).indexOf("page")==-1){
+                search.page=1;
+            }
             this.search = search;
-            this.search.page=1;
+            this.search.sortBy ="createTime";
             this.initData();
+        },
+        watch:{
+            search:{
+                deep:true,
+                handler(newVal,oldVal){
+
+                    if (!oldVal || !oldVal.key){
+
+                        return;
+                    }else{
+                        location.href = location.href.substring(0,location.href.indexOf("?")+1)+ly.stringify(this.search);
+                    }
+                }
+            }
         },
         components:{
             lyTop: () => import("./js/pages/top.js")
