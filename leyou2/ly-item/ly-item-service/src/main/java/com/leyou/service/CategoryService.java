@@ -33,4 +33,8 @@ public class CategoryService {
         category.setId(id);
         categoryMapper.deleteByPrimaryKey(category);
     }
+
+    public Category findCategoryById(Long id) {
+       return categoryMapper.selectByPrimaryKey(id);
+    }
 }

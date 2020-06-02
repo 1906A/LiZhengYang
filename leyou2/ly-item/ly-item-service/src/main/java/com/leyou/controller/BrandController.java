@@ -57,4 +57,9 @@ public class BrandController {
     public List<Brand> findBrandBycid(@PathVariable("cid") Long cid){
         return brandService.findBrandBycid(cid);
     }
+
+    @RequestMapping("findBrandById")
+    public Brand findBrandById(@RequestParam("id") Long id){
+        return brandService.findBrandById(id);
+    }
 }

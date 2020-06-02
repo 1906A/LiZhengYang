@@ -6,7 +6,9 @@ public class SearchRequest {
     private Integer page;// 当前页
 
     private String sortBy;
-    private boolean descending;
+
+    private Boolean descending;
+    private boolean descing;
 
     private static final Integer DEFAULT_SIZE = 20;// 每页大小，不从页面接收，而是固定大小
     private static final Integer DEFAULT_PAGE = 1;// 默认页
@@ -19,12 +21,20 @@ public class SearchRequest {
         this.sortBy = sortBy;
     }
 
-    public boolean isDescending() {
+    public Boolean getDescending() {
         return descending;
     }
 
-    public void setDescending(boolean descending) {
+    public void setDescending(Boolean descending) {
         this.descending = descending;
+    }
+
+    public boolean isDescing() {
+        return descing;
+    }
+
+    public void setDescing(boolean descing) {
+        this.descing = descing;
     }
 
     public String getKey() {
