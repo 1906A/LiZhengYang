@@ -70,7 +70,7 @@ public class GoodService {
                     Map<Long,Object> genericSpec = MAPPER.readValue(spuDetail.getGenericSpec(), new TypeReference<Map<Long, Object>>(){}) ;
                     String value = genericSpec.get(sp.getId()).toString();
 
-                    if(sp.getNumeric()){
+                        if(sp.getNumeric()){
                         value = chooseSegment(value,sp);
                     }
 

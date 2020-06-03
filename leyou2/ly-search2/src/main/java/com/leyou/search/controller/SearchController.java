@@ -114,8 +114,6 @@ public class SearchController {
             });
         }
 
-
-
         //Page<Goods> search = goodsRepository.search(builder.build());
 
         return new SearchResult(search.getTotalElements(), search.getContent(),
