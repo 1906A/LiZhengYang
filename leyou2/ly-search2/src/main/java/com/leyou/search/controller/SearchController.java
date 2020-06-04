@@ -11,6 +11,7 @@ import com.leyou.search.item.Goods;
 import com.leyou.search.pojo.SearchRequest;
 import com.leyou.search.pojo.SearchResult;
 import com.leyou.search.repository.GoodsRepository;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.Aggregation;
@@ -52,7 +53,21 @@ public class SearchController {
 
         NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
 
-        builder.withQuery(QueryBuilders.matchQuery("all",searchRequest.getKey()).operator(Operator.AND));
+       // builder.withQuery(QueryBuilders.matchQuery("all",searchRequest.getKey()).operator(Operator.AND));
+
+        BoolQueryBuilder builder1 = QueryBuilders.boolQuery().must(QueryBuilders.matchQuery("all", searchRequest.getKey()).operator(Operator.AND));
+        if (searchRequest.getFilter()!=null && searchRequest.getFilter().size()>0){
+            searchRequest.getFilter().keySet().forEach(key->{
+                String field ="specs."+key+".keyword";
+                if (key.equals("分类")){
+                    field ="cid3";
+                }else if (key.equals("品牌")){
+                    field="brandId";
+                }
+                builder1.filter(QueryBuilders.termQuery(field,searchRequest.getFilter().get(key)));
+            });
+        }
+        builder.withQuery(builder1);
 
         builder.withPageable(PageRequest.of(searchRequest.getPage() - 1, searchRequest.getSize()));
 
