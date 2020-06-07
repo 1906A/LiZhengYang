@@ -35,4 +35,11 @@ public class SpecParamService {
         specParam.setSearching(true);
         return specParamMapper.select(specParam);
     }
+
+    public List<SpecParam> findParamByCidAndGeneric(Long cid, boolean generic) {
+        SpecParam specParam = new SpecParam();
+        specParam.setCid(cid);
+        specParam.setGeneric(generic);
+        return specParamMapper.select(specParam);
+    }
 }
