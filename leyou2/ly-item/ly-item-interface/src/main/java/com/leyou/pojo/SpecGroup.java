@@ -4,6 +4,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.List;
 
 @Table(name = "tb_spec_group")
 public class SpecGroup {
@@ -14,6 +15,16 @@ public class SpecGroup {
     private Long cid;
 
     private String name;
+
+    private List<SpecParam> parames;
+
+    public List<SpecParam> getParames() {
+        return parames;
+    }
+
+    public void setParames(List<SpecParam> parames) {
+        this.parames = parames;
+    }
 
     public Long getId() {
         return id;

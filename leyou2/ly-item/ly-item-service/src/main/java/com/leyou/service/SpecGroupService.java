@@ -7,6 +7,7 @@ import com.leyou.pojo.SpecParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,7 +26,15 @@ public class SpecGroupService {
     public List<SpecGroup> findSpecGroupList(Long cateGoryId) {
         SpecGroup specGroup = new SpecGroup();
         specGroup.setCid(cateGoryId);
-        return specGroupMapper.select(specGroup);
+
+        List<SpecGroup> groupList = new ArrayList<>();
+        groupList = specGroupMapper.select(specGroup);
+        groupList.forEach(group ->{
+            SpecParam param = new SpecParam();
+            param.setGroupId(group.getId());
+            group.setParames(specParamMapper.select(param));
+        });
+        return groupList;
     }
 
     public void deleteBySpecGroupId(Long id) {
